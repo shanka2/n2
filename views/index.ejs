@@ -1,0 +1,31 @@
+<% include __include/__top.ejs %>
+<link rel="stylesheet" href="<%- $$._path(__filename)("css") %>">
+
+<h1>
+    <%- $$.abcd('I')('am')('happy')('!!!') %> <br/>
+    <%- $$.query(['b','d']) %> <br/>
+</h1>
+<input type="file" multiple @change="_upload_preview" id="_f">
+<button @click="_upload" v-if="files.length">upload</button>
+<draggable :list="files">
+    <div v-for="f in files" id="_files">
+        <img :src="f.url" :alt="f.name" v-if="f.type.indexOf('image')>-1"> {{f.name}}
+    </div>
+</draggable>
+
+<div v-for="d in r" id="_r">
+    <h1 @dblclick="_delete_item(d._id)">{{d._id}}</h1>
+    <div v-for="i in d.img">
+        <img :src="'/upload/thumb/' + i" :alt="i"> {{i.substr(i.indexOf('_')+1)}}
+    </div>
+</div>
+
+<ul>
+    <li v-for="(v,k) in x">
+        {{k}} <span v-if="typeof v === 'string'">- {{v}}</span>
+        <div v-if="typeof v === 'object'" v-for="i in v">{{i}}</div>
+    </li>
+</ul>
+
+<% include __include/__bottom.ejs %>
+<script src="<%- $$._path(__filename)("js") %>"></script>

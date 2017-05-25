@@ -1,0 +1,31 @@
+<% include __include/__top.ejs %>
+<link rel="stylesheet" href="<%- $$._path(__filename)("css") %>">
+
+
+<input type="file" multiple @change="_preview" id="_f">
+
+<template v-if="files.length">
+    <button @click="_upload" v-if="files">upload</button>
+    <button @click="_reset">reset</button>
+</template>
+
+
+<div>
+    <div v-for="f in files">
+        <img :src="f.url" :alt="f.name">
+        {{f.name}}
+    </div>
+</div>
+
+<div>
+    <div v-for="d in r">
+        <h1>{{d.idx}}</h1>
+        <div v-for="i in d.imgs.split(',')">
+            <img :src="'/upload/thumb/100/' + i" :alt="i"> {{i.substr(i.indexOf('_')+1)}}
+        </div>
+    </div>
+</div>
+
+
+<% include __include/__bottom.ejs %>
+<script src="<%- $$._path(__filename)("js") %>"></script>
