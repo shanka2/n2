@@ -1,8 +1,7 @@
+var fs = require('fs');
 var express = require('express');
 var router = express.Router();
-var co = require('co');
-var fs = require('fs');
-var assert = require('assert');
+var co = require('co')
 
 router.get('/', function (req, res, next) {
 

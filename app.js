@@ -26,10 +26,8 @@ app.use(require('./middlewear')(app));
 
 
 //routes
-app.use('/', require('./routes/index'));
-app.use('/product', upload.any(), require('./routes/product'));
+app.use('/', require('./routes/test'));
 app.use('/test', upload.any(), require('./routes/test'));
-app.use('/admin/category', require('./routes/admin/category'));
 app.use('/admin/product', upload.any(), require('./routes/admin/product'));
 
 

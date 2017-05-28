@@ -34,6 +34,7 @@ var server = http.createServer(app);
 
 async.waterfall([
 
+    /*
     function(callback) {
     
         var MongoClient = require('mongodb').MongoClient;
@@ -49,6 +50,7 @@ async.waterfall([
         });
         
     },
+    */
     function(callback) {
     
         var mysql = require('mysql');

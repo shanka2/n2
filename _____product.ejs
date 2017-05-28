@@ -48,9 +48,10 @@
 
 <br>
 
+<input type="text" v-model='s_value' @keypress.enter='_search(s_value)'>
+<span @click="_search('')" v-if="x.qs.s_value">{{x.qs.s_value}}</span>
 
 
-<search :v="x.qs.s_value"></search>
 
 <table class="_table_100 _excel">
     <thead>
@@ -63,7 +64,7 @@
     
     <template v-for="(m, n) in _.uniq(r, 'idx')">
         <tr class="list_value" :idx="m.idx">
-            <td :rowspan="m.row_cnt"><paging :x='x' :n='n'></paging></td>
+            <td :rowspan="m.row_cnt">{{$p.no($p,n)}}</td>
             <td :rowspan="m.row_cnt" class="_no_excel"><img v-for="(img, i) in (m.imgs || '').split(',')" :src="'/upload/thumb/100/' + img" :alt="m.idx + ':' + i" v-if="m.imgs"></td>
             <td :rowspan="m.row_cnt" class="_left" :title="m.idx" @click="_select(m.idx)">{{m.name}}</td>
             <td class="_left">{{m.opt1}}</td>
@@ -75,7 +76,20 @@
     </template>
 </table>
 
-<paging :x='x'></paging>
+<div v-if="!_.isEmpty($p)">
+    <span v-if="$p.prev_page" @click="_page($p.prev_page)">prev</span>
+    <span v-for="n in $p.now_block_size" :class="{_selected: ($p.p_no($p,n) == $p.now_page)}" @click='_page($p.p_no($p,n))'> {{$p.p_no($p,n)}} </span>
+    <span v-if="$p.next_page" @click="_page($p.next_page)">next</span>
+    <select v-model="$p.page_size" @change="_page(1, $p.page_size)">
+        <option v-for="v in $p.page_size_list">{{v}}</option>
+    </select>
+    
+    <!--
+    {{$p.page_size}}
+    <br><br>
+    <div v-for="n in $p.now_page_size" v-if="$p.no($p,n-1) > 0">NO. {{$p.no($p,n-1)}}</div>
+    -->
+</div>
 
 <% include ../__include/__bottom.ejs %>
 <script src="<%- $$._path(__filename)("js") %>"></script>

@@ -12,13 +12,12 @@ var vue = new Vue({
             opt2_name: "size",
             opt: []
         },
-        $p: {},
-        s_value: "",
-        files: []
+        form_d: {},
+        files: [],
     },
 
     created() {
-        this._set()
+        this.form_d = _.clone(this.form)
     },
 
     methods: {
@@ -38,9 +37,10 @@ var vue = new Vue({
                     
                     files[n] = {
                         name: f[n].name,
-                        type: f[n].type,
+//                        type: f[n].type,
                         file: f[n],
-                        url: e.target.result
+                        url: e.target.result,
+                        del: false
                     }
                     next()
                     
@@ -48,7 +48,7 @@ var vue = new Vue({
                 
             }, (err)=>{
                 
-                z.files = [...files]
+                z.files = [...z.files, ...files]
                 
             })
         },
@@ -59,7 +59,10 @@ var vue = new Vue({
             var f = z.files
             
             for(i in f) {
-                data.append("files", f[i].file)
+                if(f[i].old_name && f[i].del) data.append("unlink", f[i].old_name)
+                if(f[i].old_name && !f[i].del) data.append("old_name", f[i].old_name)
+                if(!f[i].del) data.append("q", f[i].file ? "_new" : "_old")
+                if(f[i].file && !f[i].del) data.append("files", f[i].file)
             }
             data.append("idx", idx)
             
@@ -67,7 +70,6 @@ var vue = new Vue({
                 .catch(err => console.log(err))
                 .then(x => {
                     z.r = x.data.r
-                    z._set()
                 })
             
             z._reset()
@@ -76,42 +78,47 @@ var vue = new Vue({
         _reset () {
             this.files = []
             document.getElementById('_f').value = ''
-        },
-      
-        _set() {
-            if (!_.isEmpty(this.r)) {
-                this.$p = _pagination(this.r[0].total_record, this.x.now_page, this.x.page_size);
-            }
+            this.form = _.clone(this.form_d)
         },
         
         _exec(action) {
             var z = this
-            axios.post(__pathname + action, z.form).then(x => {
-                
-                if(action == 'insert') {
-                    z._upload(x.data.idx)
-                }
-            })
+            axios.post(__pathname + action, z.form).then(x => z._upload(x.data.idx))
         },
 
-        _info(idx) {
-            var a = _.where(this.r,{idx})
+        _select(idx) {
+            var d = _.where(this.r,{idx})
             var f = this.form
             f.idx = idx
             f.opt = []
-            for (i in a) {
-                f.name = a[i].name
-                f.price = a[i].price
-                f.description = a[i].description
-                f.opt1_name = a[i].opt1_name || 'color'
-                f.opt2_name = a[i].opt2_name || 'size'
-                if(a[i].opt1){
+            for (i in d) {
+                f.name = d[i].name
+                f.price = d[i].price
+                f.description = d[i].description
+                f.opt1_name = d[i].opt1_name || 'color'
+                f.opt2_name = d[i].opt2_name || 'size'
+                if(d[i].opt1){
                     f.opt.push({
-                        opt1: a[i].opt1,
-                        opt2: a[i].opt2
+                        opt1: d[i].opt1,
+                        opt2: d[i].opt2
                     })
                 }
             }
+            
+            var files = []
+            if(d[0].imgs) {
+                var z = d[0].imgs.split(",")
+                for (i in z) {
+                    files[i] = {
+                        name: z[i].substr(z[i].indexOf('_')+1),
+                        old_name: z[i],
+                        url: "/upload/thumb/100/" + z[i],
+                        del: false
+                    }
+                }
+            }
+            this.files = [...files]
+            
         },
 
         _opt_add() {
@@ -123,18 +130,6 @@ var vue = new Vue({
 
         _opt_remove(k) {
             this.form.opt.splice(k, 1)
-        },
-
-        _page(now_page, page_size) {
-            if (page_size) {
-                location.href = '?now_page=' + now_page + '&page_size=' + page_size + _query(['now_page', 'page_size'])
-            } else {
-                location.href = '?now_page=' + now_page + _query('now_page')
-            }
-        },
-
-        _search(s_value) {
-            location.href = '?s_value=' + s_value + _query(['now_page', 's_value'])
         },
 
     }

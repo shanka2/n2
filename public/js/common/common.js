@@ -37,43 +37,6 @@ var tableToExcel = (function () {
     }
 })();
 
-
-var _pagination = (total_record, now_page, page_size) => {
-
-    now_page = now_page || 1
-    now_page_size = page_size == 'ALL' ? total_record : parseInt(page_size || 10)
-
-    var block_size = 10
-    var total_page = Math.ceil(total_record / now_page_size)
-    var total_block = Math.ceil(total_page / block_size)
-    var now_block = Math.ceil(now_page / block_size)
-
-    var now_block_size = now_block != total_block ? block_size : total_page - ((now_block - 1) * block_size)
-    var prev_page = now_block - 2 >= 0 ? (now_block - 2) * block_size + 1 : null
-    var next_page = now_block != total_block ? now_block * block_size + 1 : null
-
-    return {
-        total_record,
-        now_page,
-        now_page_size,
-        page_size,
-        block_size,
-        total_page,
-        total_block,
-        now_block,
-        now_block_size,
-        prev_page,
-        next_page,
-        no(o, n) {
-            return o.total_record - (o.now_page_size * (o.now_page - 1)) - n
-        },
-        p_no(o, n) {
-            return o.block_size * (o.now_block - 1) + n
-        },
-        page_size_list: [1, 2, 3, 5, 7, 10, 15, 20, 25, 30, 50, 100, 200, 300, 500, 1000, 'ALL']
-    }
-}
-
 var _query = (f = []) => {
     var q = _.omit($$.qs, f)
     var r = ""

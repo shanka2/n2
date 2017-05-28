@@ -11,10 +11,8 @@ module.exports = (app) => (req, res, next) => {
     req.axios = req.headers['auth-token'] == "axios"
     
     req.s_value = req.query.s_value || null
-    req.now_page = req.query.now_page || 1
     req.page_size = req.query.page_size == 'ALL' ? 100000000 : (req.query.page_size || 10);
-    req.now_page_size = req.query.page_size || 10;
-    req.prev_size = req.page_size * (req.now_page - 1);
+    req.prev_size = req.page_size * ((req.query.now_page || 1) - 1);
     
     req.connection = app.locals.connection;
 
@@ -54,28 +52,24 @@ module.exports = (app) => (req, res, next) => {
         return f;
     }
     
+    req._array = (x) => typeof x == "string" ? [x] : (x || [])
+    
+    req._total_record = (r) => app.locals.$$.total_record = _.isEmpty(r) ? 0 : r[0].total_record  
+    
     app.locals.$$ = {
         title: "express study",
-        sub_title: "less study",
-        less: [
-            'Getting Started',
-            'Variables',
-            'Mixins',
-            'Nesting and Scope',
-            'Operations',
-            'Functions',
-        ],
         qs: req.query,
-        abcd: a => b => c => d => [a, b, c, d].join(" "),
         _path: (path) => (x) => {
             var m = path.substr(path.indexOf('views') + 'views'.length)
             var p = m.split('/')
             var f = p.reverse()[0]
             return "/" + x + m.replace(f, "__" + f.replace(".ejs", "." + x))
         },
-        page_size: req.now_page_size,
-        now_page: req.now_page
+        total_record: 0,
+        page_size: req.query.page_size || 10,
+        now_page: req.query.now_page || 1
     }
+    
     app.locals.r = ""
     
     next()
