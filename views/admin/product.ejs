@@ -30,25 +30,13 @@
     </tr>
 </table>
 
-
-<input type="file" multiple @change="_preview" id="_f" v-if="form.name">
 <button @click="_reset" v-if="form.name">reset</button>
-
-<draggable :list="files">
-<div v-for="f in files" class="_files" :class="{_del:f.del, _isNew:f.file}">
-    <div><img :src="f.url" :alt="f.name">{{f.name}}</div>
-    <div><input type="checkbox" v-model="f.del"></div>
-</div>
-</draggable>
-
 <button onclick="tableToExcel('product_list')">tableToExcel</button>
 <button @click="_exec('insert')">insert</button>
 <button @click="_exec('update')" v-if="form.idx">update</button>
 <button @click="_exec('delete')" v-if="form.idx">delete</button>
 
-<br>
-
-
+<files></files>
 
 <search :v="x.qs.s_value"></search>
 
@@ -61,7 +49,7 @@
         <td width="15%">PRICE</td>
     </thead>
     
-    <template v-for="(m, n) in _.uniq(r, 'idx')">
+    <template v-for="(m, n) in _.uniq(x.r, 'idx')">
         <tr class="list_value" :idx="m.idx">
             <td :rowspan="m.row_cnt"><paging :x='x' :n='n'></paging></td>
             <td :rowspan="m.row_cnt" class="_no_excel"><img v-for="(img, i) in (m.imgs || '').split(',')" :src="'/upload/thumb/100/' + img" :alt="m.idx + ':' + i" v-if="m.imgs"></td>
@@ -69,7 +57,7 @@
             <td class="_left">{{m.opt1}}</td>
             <td :rowspan="m.row_cnt" class="_right">{{m.price}}</td>
         </tr>
-        <tr class="list_value_sub" v-if="m.row_cnt > 1" v-for="s in r.filter(i => i.idx == m.idx).slice(1)">
+        <tr class="list_value_sub" v-if="m.row_cnt > 1" v-for="s in x.r.filter(i => i.idx == m.idx).slice(1)">
             <td class="_left">{{s.opt1}}</td>
         </tr>
     </template>

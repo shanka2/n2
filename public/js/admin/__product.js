@@ -1,8 +1,9 @@
+window.Event = new Vue()
+
 var vue = new Vue({
     el: "#_root",
     data: {
         x: $$,
-        r: $$R,
         form: {
             idx: "",
             name: "",
@@ -13,81 +14,30 @@ var vue = new Vue({
             opt: []
         },
         form_d: {},
-        files: [],
     },
 
     created() {
         this.form_d = _.clone(this.form)
+        Event.$on("_reload_data", x => {
+            this.x.r = [...x.r]
+            this._reset()
+        })
     },
 
     methods: {
-        
-        _preview () {
-            var z = this
-            var f = event.target.files
-            var files = []
-            
-            async.times(f.length, (n, next)=>{
-                
-                var reader = new FileReader()
-                
-                reader.readAsDataURL(f[n])
-                
-                reader.onload = (e) => {
-                    
-                    files[n] = {
-                        name: f[n].name,
-//                        type: f[n].type,
-                        file: f[n],
-                        url: e.target.result,
-                        del: false
-                    }
-                    next()
-                    
-                }
-                
-            }, (err)=>{
-                
-                z.files = [...z.files, ...files]
-                
-            })
-        },
           
-        _upload (idx) {
-            var z = this
-            var data = new FormData()
-            var f = z.files
-            
-            for(i in f) {
-                if(f[i].old_name && f[i].del) data.append("unlink", f[i].old_name)
-                if(f[i].old_name && !f[i].del) data.append("old_name", f[i].old_name)
-                if(!f[i].del) data.append("q", f[i].file ? "_new" : "_old")
-                if(f[i].file && !f[i].del) data.append("files", f[i].file)
-            }
-            data.append("idx", idx)
-            
-            axios.post(__pathname + "img", data, file_upload_config)
-                .catch(err => console.log(err))
-                .then(x => {
-                    z.r = x.data.r
-                })
-            
-            z._reset()
-        },
-        
         _reset () {
-            this.files = []
-            document.getElementById('_f').value = ''
             this.form = _.clone(this.form_d)
+            Event.$emit("_reset")
         },
         
         _exec(action) {
             var z = this
-            axios.post(__pathname + action, z.form).then(x => z._upload(x.data.idx))
+            axios.post(__pathname + action, z.form).then(x => Event.$emit("_upload", {idx: x.data.idx}))
         },
 
         _select(idx) {
-            var d = _.where(this.r,{idx})
+            var d = _.where(this.x.r,{idx})
             var f = this.form
             f.idx = idx
             f.opt = []
@@ -105,19 +55,7 @@ var vue = new Vue({
                 }
             }
             
-            var files = []
-            if(d[0].imgs) {
-                var z = d[0].imgs.split(",")
-                for (i in z) {
-                    files[i] = {
-                        name: z[i].substr(z[i].indexOf('_')+1),
-                        old_name: z[i],
-                        url: "/upload/thumb/100/" + z[i],
-                        del: false
-                    }
-                }
-            }
-            this.files = [...files]
+            Event.$emit("_select", {imgs: d[0].imgs})
             
         },
 
