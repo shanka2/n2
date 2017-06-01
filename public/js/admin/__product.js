@@ -17,18 +17,35 @@ var vue = new Vue({
     },
 
     created() {
+        
         this.form_d = _.clone(this.form)
+        
         Event.$on("_reload_data", x => {
-            this.x.r = [...x.r]
+            this.x = x.r
             this._reset()
         })
+        
+        Event.$on("_exec", x => {
+            this._exec(x.action)
+        })
+        
+        Event.$on("_reset", x => {
+            this._reset()
+        })
+
+    },
+
+    computed: {
+        isDirtyForm () {
+            return !_.isEqual(this.form, this.form_d)
+        }
     },
 
     methods: {
           
         _reset () {
             this.form = _.clone(this.form_d)
-            Event.$emit("_reset")
+            Event.$emit("_reset_files")
         },
         
         _exec(action) {

@@ -1,7 +1,7 @@
 Vue.component("paging", {
     template: `
         <span>
-            <div v-if="x.total_record > 0 && n == undefined">
+            <div v-if="x.r.length > 0 && n == undefined">
                 <span v-if="$p.prev_page" @click="_page($p.prev_page)">prev</span>
                 <span v-for="n in $p.now_block_size" :class="{_selected: (_page_no(n) == $p.now_page)}" @click='_page(_page_no(n))'> {{_page_no(n)}} </span>
                 <span v-if="$p.next_page" @click="_page($p.next_page)">next</span>
@@ -14,6 +14,9 @@ Vue.component("paging", {
                 <br><br>
                 <div v-for="n in $p.now_page_size" v-if="_no(n-1) > 0">NO. {{_no(n-1)}}</div>
                 -->
+            </div>
+            <div v-if="!x.r.length">
+                <h1>no records</h1>
             </div>
             <span v-if="n != undefined">
                 {{_no(n)}}
@@ -28,10 +31,17 @@ Vue.component("paging", {
     },
     
     created () {
-        this.$p = this._pagination(this.x.total_record, this.x.now_page, this.x.page_size);
+        this._set()
+        Event.$on("_reload_data", x => {
+            this._set()
+        })
     },
     
     methods: {
+        
+        _set() {
+            this.$p = this._pagination(this.x.total_record, this.x.now_page, this.x.page_size);
+        },
 
         _page(now_page, page_size) {
             if (page_size) {

@@ -2,7 +2,6 @@ Vue.component("files", {
     template: `
         <div>
             <input type="file" multiple @change="_preview" id="_f">
-            <button @click="_reset" v-if="hasOwnResetBtn">reset</button>
 
             <draggable :list="files">
             <div v-for="f in files" class="_files" :class="{_del:f.del, _isNew:f.file}">
@@ -13,7 +12,7 @@ Vue.component("files", {
         </div>
     `,
     
-    props: ['hasOwnResetBtn'],
+    props: [],
     
     data() {
         return {
@@ -22,7 +21,7 @@ Vue.component("files", {
     },
 
     created () {
-        Event.$on("_reset", () => this._reset())
+        Event.$on("_reset_files", () => this._reset())
         Event.$on("_select", x => this._select(x.imgs))
         Event.$on("_upload", x => this._upload(x.idx))
     },
@@ -101,7 +100,7 @@ Vue.component("files", {
                 }
             }
             
-            this.files = [...files]            
+            this.files = files            
             
         },
         

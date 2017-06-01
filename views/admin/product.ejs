@@ -30,13 +30,9 @@
     </tr>
 </table>
 
-<button @click="_reset" v-if="form.name">reset</button>
-<button onclick="tableToExcel('product_list')">tableToExcel</button>
-<button @click="_exec('insert')">insert</button>
-<button @click="_exec('update')" v-if="form.idx">update</button>
-<button @click="_exec('delete')" v-if="form.idx">delete</button>
-
 <files></files>
+
+<exec :idx="form.idx" :excel="'product_list'" :reset="isDirtyForm"></exec>
 
 <search :v="x.qs.s_value"></search>
 

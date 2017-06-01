@@ -20,8 +20,8 @@ module.exports = (app) => (req, res, next) => {
 
         req.connection.query('call ' + query + '(' + param.map(p => '?').join() + ')', param, function (err, rows, fields) {
             if (err) throw err;
-
-            resolve(rows[0])
+            
+            resolve(req._r(rows[0] || []))
 
         });
     })
@@ -54,8 +54,6 @@ module.exports = (app) => (req, res, next) => {
     
     req._array = (x) => typeof x == "string" ? [x] : (x || [])
     
-    req._total_record = (r) => app.locals.$$.total_record = _.isEmpty(r) ? 0 : r[0].total_record  
-    
     app.locals.$$ = {
         title: "express study",
         qs: req.query,
@@ -65,12 +63,17 @@ module.exports = (app) => (req, res, next) => {
             var f = p.reverse()[0]
             return "/" + x + m.replace(f, "__" + f.replace(".ejs", "." + x))
         },
+        r: [],
         total_record: 0,
         page_size: req.query.page_size || 10,
         now_page: req.query.now_page || 1
     }
-    
-    app.locals.r = ""
+        
+    req._r = (x) => {
+        app.locals.$$.total_record = x.length ? (x[0].total_record || 0) : 0
+        app.locals.$$.r = x
+        return app.locals.$$
+    }
     
     next()
 }

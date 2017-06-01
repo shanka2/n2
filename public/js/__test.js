@@ -1,63 +1,57 @@
+window.Event = new Vue()
 
 var vue = new Vue({
     el: "#_root",
     data: {
         x: $$,
-        r: $$R,
-        files: []
+        form: {
+            idx: "",
+        },
+        form_d: {},
     },
+
+    created() {
+        
+        this.form_d = _.clone(this.form)
+        
+        Event.$on("_reload_data", x => {
+            this.x = x.r
+            this._reset()
+        })
+        
+        Event.$on("_exec", x => {
+            this._exec(x.action)
+        })
+        
+        Event.$on("_reset", x => {
+            this._reset()
+        })
+
+    },
+
+    computed: {
+    },
+
     methods: {
-        
-        _preview () {
-            var z = this
-            var f = event.target.files
-            var files = []
-            
-            async.times(f.length, (n, next)=>{
-                
-                var reader = new FileReader()
-                
-                reader.readAsDataURL(f[n])
-                
-                reader.onload = (e) => {
-                    
-                    files[n] = {
-                        name: f[n].name,
-                        type: f[n].type,
-                        file: f[n],
-                        url: e.target.result
-                    }
-                    next()
-                    
-                }
-                
-            }, (err)=>{
-                
-                z.files = [...files]
-                
-            })
-        },
-        
-        _upload () {
-            var z = this
-            var data = new FormData()
-            var f = z.files
-            
-            for(i in f) {
-                data.append("files", f[i].file)
-            }
-            
-            axios.post("/test", data, file_upload_config)
-                .catch(err => console.log(err))
-                .then(x => z.r = [...x.data.r])
-            
-            z._reset()
-        },
-        
+          
         _reset () {
-            this.files = []
-            document.getElementById('_f').value = ''
-        }
+            this.form = _.clone(this.form_d)
+            Event.$emit("_reset_files")
+        },
         
+        _exec(action) {
+            var z = this
+            axios.post(__pathname + action, z.form).then(x => Event.$emit("_upload", {idx: x.data.idx}))
+        },
+
+        _select(idx) {
+            var d = _.where(this.x.r,{idx})
+            var f = this.form
+            f.idx = idx
+            
+            Event.$emit("_select", {imgs: d[0].imgs})
+            
+        },
+
     }
 })
