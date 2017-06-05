@@ -1,0 +1,16 @@
+<% include ../__include/__top.ejs %>
+<link rel="stylesheet" href="<%- $$._path(__filename)("css") %>">
+
+
+    <button @click="_save" v-if="_hasToUpdate">update</button>
+
+    <br>
+    <br>
+
+    <sortable :items="items" :depth="2" :opened="1"></sortable>
+
+<% include ../__include/__bottom.ejs %>
+<script src="<%- $$._path(__filename)("js") %>"></script>
+
+
+

@@ -6,13 +6,9 @@ var co = require('co')
 router.get('/', function (req, res, next) {
 
     co(function* () {
-        
         res.render('index', {})
-        
     }).catch(err => console.log(err))
     
 })
 
-
 module.exports = router;
-
