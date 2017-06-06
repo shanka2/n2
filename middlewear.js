@@ -75,5 +75,17 @@ module.exports = (app) => (req, res, next) => {
         return app.locals.$$
     }
     
+
+    req._table = () => {
+        var x;
+        if(req.originalUrl.indexOf("category") > -1) x = "_category";
+        if(req.originalUrl.indexOf("event") > -1) x = "_event";
+        if(req.originalUrl.indexOf("menu") > -1) x = "_menu";
+        if(req.originalUrl.indexOf("board_id") > -1) x = "_board_id";
+        if(req.originalUrl.indexOf("setting") > -1) x = "_setting";    
+        return x
+    }
+    
+    
     next()
 }

@@ -5,8 +5,12 @@ Vue.component("sortable", {
                 <li v-for="(item,i) in items">
                     <span v-if="opened" @click="item.opened = item.opened * -1">-</span>
                     <span v-show="!item.ic" @dblclick="_edit_mode(i)">{{item.name}}</span>
-                    <input ref="name" type="text" v-show="item.ic" :value="item.name" @keypress.enter="_edit(i)"><button @click="_del(i)">-</button><span v-if="item.cnt">({{item.cnt}})</span>
-                    <sortable :items="item.items" :depth="depth-1" v-if="(depth || 0)>1" v-show="item.opened>0"></sortable>
+                    <input ref="name" type="text" v-show="item.ic" :value="item.name" @keypress.enter="_edit(i)" @keyup.esc="item.ic = false" @blur="item.ic = false">
+                    <input ref="link" type="text" v-if="dd && link" v-model="item.link">
+                    <input ref="setting" type="text" v-if="dd && setting" v-model="item.setting">
+                    <button @click="_del(i)">-</button>
+                    <span v-if="item.cnt">({{item.cnt}})</span>
+                    <sortable :items="item.items" :depth="depth-1" :dd="depth" :link="link" :setting="setting" v-if="(depth || 0)>1" v-show="item.opened>0"></sortable>
                     <br>
                 </li>
             </draggable>
@@ -14,7 +18,7 @@ Vue.component("sortable", {
         </span>
     `,
 
-    props: ['items', 'depth', 'opened'],
+    props: ['items', 'depth', 'opened', 'dd', 'link', 'setting'],
 
     methods: {
         _add() {
@@ -24,7 +28,8 @@ Vue.component("sortable", {
                 this.items.push({
                     name: event.target.value,
                     items: [],
-                    ic: false
+                    ic: false,
+                    opened: 1
                 })
                 event.target.value = ""
 
@@ -42,9 +47,7 @@ Vue.component("sortable", {
         },
 
         _edit(i) {
-            if (!_.where(this.items, {
-                    name: event.target.value
-                }).length) {
+            if (!_.where(this.items, {name: event.target.value}).length) {
                 this.items[i].name = event.target.value
                 this.items[i].ic = false
             }

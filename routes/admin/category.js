@@ -6,7 +6,7 @@ var co = require('co')
 router.get('/', function (req, res, next) {
 
     co(function* () {
-        yield req.mquery('_category_list', [
+        yield req.mquery(req._table() + '_list', [
             100
         ]).then(r => {
 
@@ -20,11 +20,13 @@ router.get('/', function (req, res, next) {
     
 })
 
-router.post('/', function (req, res, next) {
-
+router.post('/save', function (req, res, next) {
+    
     co(function* () {
         
-        yield req.mquery('_category_set', [req.body.q])
+        //console.log(req.body.q);
+        
+        yield req.mquery(req._table() + '_save', [req.body.q])
 
         res.redirect(req.get('referer'))
         

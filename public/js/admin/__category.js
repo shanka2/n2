@@ -7,6 +7,7 @@ var vue = new Vue({
     },
 
     mounted() {
+        
         this._set()
         
         var z = this;
@@ -34,6 +35,8 @@ var vue = new Vue({
                     "",
                     _i,
                     "",
+                    "",
+                    "",
                     i.opened
                 ].join("^"))
 
@@ -43,7 +46,10 @@ var vue = new Vue({
                         i.name,
                         j.name,
                         _i,
-                        _j
+                        _j,
+                        j.link,
+                        j.setting,
+                        1
                     ].join("^"))
                 })
             })
@@ -61,7 +67,7 @@ var vue = new Vue({
     methods: {
         _save() {
             var z = this
-            axios.post("/admin/category", {q: this._lists}).then(x => {
+            axios.post(__pathname + "save", {q: this._lists}).then(x => {
                 z.x = x.data.r
                 z._set()
             });
@@ -90,7 +96,9 @@ var vue = new Vue({
                         name: i.c2,
                         cnt: i.cnt,
                         items: [],
-                        ic: false
+                        ic: false,
+                        link: i.link,
+                        setting: i.setting
                     })
                 }
             })
