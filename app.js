@@ -28,8 +28,10 @@ app.use(require('./middlewear')(app));
 //routes
 app.use('/', require('./routes/index'));
 app.use('/test', upload.any(), require('./routes/test'));
+
 app.use(['/admin/category', '/admin/menu', '/admin/event', '/admin/board_id'], require('./routes/admin/category'));
 app.use('/admin/product', upload.any(), require('./routes/admin/product'));
+app.use('/admin', require('./routes/admin/index'));
 
 
 // catch 404 and forward to error handler
