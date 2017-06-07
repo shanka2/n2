@@ -55,8 +55,9 @@ async.waterfall([
     
         var mysql = require('mysql');
         var connection = mysql.createConnection({
-            host: 'localhost',
+            host: '210.109.97.154',
             user: 'root',
+            password: 'byfor0104!',
             database: '_mall'
         });
 
