@@ -7,7 +7,7 @@ router.get('/', function (req, res, next) {
 
     co(function* () {
         
-        res.render('admin/index')
+        res.render('mall/index')
         
     }).catch(err => console.log(err))
     

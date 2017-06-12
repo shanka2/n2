@@ -5,19 +5,14 @@ var co = require('co')
 router.get('/', function (req, res, next) {
 
     co(function* () {
+        
         yield req.mquery('_product_list', [
             req.prev_size,
             req.page_size,
             req.s_value,
             100
-        ]).then(r => {
-
-            if(req.axios){
-                res.json({r})
-            } else {
-                res.render('admin/product', {r})
-            }
-        })
+        ]).then(r => req.axios ? res.json({r}) : res.render('admin/product', {r}))
+                
     }).catch(err => console.log(err))
     
 })
@@ -25,6 +20,7 @@ router.get('/', function (req, res, next) {
 router.post('/insert', function (req, res, next) {
 
     co(function* () {
+        
         var idx
         yield req.mquery('_product_insert', [
             req.body.name,
@@ -53,6 +49,7 @@ router.post('/insert', function (req, res, next) {
 router.post('/update', function (req, res, next) {
 
     co(function* () {
+        
         yield req.mquery('_product_update', [
             req.body.idx,
             req.body.name,
@@ -92,7 +89,7 @@ router.post('/delete', function (req, res, next) {
 })
 
 
-router.post('/img', require('../img')('_product_update_imgs'), function (req, res, next) {
+router.post('/img', require('../common/img')('_product_update_imgs'), function (req, res, next) {
 
     res.redirect(req.get('referer'))
     

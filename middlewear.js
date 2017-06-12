@@ -86,6 +86,7 @@ module.exports = (app) => (req, res, next) => {
         return x
     }
     
-    
+      console.log(req.query);
+  
     next()
 }

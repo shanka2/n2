@@ -1,0 +1,20 @@
+#_r_all(@size: 5px) {
+	-webkit-border-radius: @size;
+	-moz-border-radius: @size;
+	-o-border-radius: @size;
+	border-radius: @size;
+}
+
+#_r_top(@size: 10px) {
+	-webkit-border-radius: @size @size 0px 0px;
+	-moz-border-radius: @size @size 0px 0px;
+	-o-border-radius: @size @size 0px 0px;
+	border-radius: @size @size 0px 0px;
+}
+
+#_r_bottom(@size: 10px) {
+	-webkit-border-radius: 0px 0px @size @size;
+	-moz-border-radius: 0px 0px @size @size;
+	-o-border-radius: 0px 0px @size @size;
+	border-radius: 0px 0px @size @size;
+}

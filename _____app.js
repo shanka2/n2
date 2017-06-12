@@ -21,21 +21,19 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(lessMiddleware(path.join(__dirname, 'static')));
-app.use(express.static(path.join(__dirname, 'dist')));
+app.use(express.static(path.join(__dirname, 'static')));
 app.use(require('./middlewear')(app));
 
 
 //routes
+app.use('/', require('./routes/mall/index'));
 
-//app.use(['/admin/category', '/admin/menu', '/admin/event', '/admin/board_id'], require('./routes/admin/category'));
-//app.use('/admin/product', upload.any(), require('./routes/admin/product'));
-//app.use('/admin', require('./routes/admin/index'));
+app.use(['/admin/category', '/admin/menu', '/admin/event', '/admin/board_id'], require('./routes/admin/category'));
+app.use('/admin/product', upload.any(), require('./routes/admin/product'));
+app.use('/admin', require('./routes/admin/index'));
 
 
 app.use('/api/product', upload.any(), require('./routes/admin/product'));
-
-
-app.use('*', express.static(path.join(__dirname, 'dist')));
 
 
 // catch 404 and forward to error handler

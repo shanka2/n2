@@ -6,16 +6,11 @@ var co = require('co')
 router.get('/', function (req, res, next) {
 
     co(function* () {
+        
         yield req.mquery(req._table() + '_list', [
             100
-        ]).then(r => {
+        ]).then(r => req.axios ? res.json({r}) : res.render('admin/category', {r}))
 
-            if(req.axios){
-                res.json({r})
-            } else {
-                res.render('admin/category', {r})
-            }
-        })
     }).catch(err => console.log(err))
     
 })
@@ -33,6 +28,5 @@ router.post('/save', function (req, res, next) {
     }).catch(err => console.log(err))
     
 })
-
 
 module.exports = router;

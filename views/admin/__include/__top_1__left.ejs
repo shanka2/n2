@@ -1,0 +1,7 @@
+<div id="__top_1__left">
+    <div v-for="(v,k) in r" :class="{_c1: !v.c2, _c2: v.c2}">
+        <template v-if="!v.c2">{{v.c1}}</template>
+        <template v-if="v.c2 && !v.link">{{v.c2}}</template>
+        <a :href="'/admin' + v.link" v-if="v.link">{{v.c2}}</a>
+    </div>
+</div>

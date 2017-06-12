@@ -1,0 +1,44 @@
+<modal-x :title="'product info - idx : ' + form.idx">
+    
+    <template slot="body">
+        <table class="table_101">
+            <tr>
+                <td>name</td>
+                <td><input v-model="form.name"></td>
+            </tr>
+            <tr>
+                <td>price</td>
+                <td><input v-model="form.price"></td>
+            </tr>
+            <tr>
+                <td>description</td>
+                <td><input v-model="form.description"></td>
+            </tr>
+            <tr>
+                <td>option</td>
+                <td>
+                    <table class="_table_x">
+                        <tr>
+                            <td><input v-model="form.opt1_name"></td>
+                            <td><input v-model="form.opt2_name"></td>
+                            <td><button @click="_opt_add">+</button></td>
+                        </tr>
+                        <tr v-for="(v, k) in form.opt">
+                            <td><input v-model="v.opt1"></td>
+                            <td><input v-model="v.opt2"></td>
+                            <td><button @click="_opt_remove(k)">-</button></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+
+
+        <files></files>
+    </template>
+    
+    <exec :idx="form.idx" :reset="isDirtyForm" slot="footer"></exec>
+    
+</modal-x>
+
+

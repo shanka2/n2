@@ -1,42 +1,11 @@
-<% include ../__include/__top_1.ejs %>
+<% include __include/__top_1.ejs %>
+<% include ____product.ejs %>
 <link rel="stylesheet" href="<%- $$._path(__filename)("css") %>">
 
+<search></search>
 
-<table>
-    <tr>
-        <td>name</td>
-        <td><input type="text" v-model="form.name"></td>
-    </tr>
-    <tr>
-        <td>price</td>
-        <td><input type="text" v-model="form.price"></td>
-    </tr>
-    <tr>
-        <td>description</td>
-        <td><input type="text" v-model="form.description"></td>
-    </tr>
-</table>
 
-<table>
-    <tr>
-        <td><input type="text" v-model="form.opt1_name"></td>
-        <td><input type="text" v-model="form.opt2_name"></td>
-        <td><button @click="_opt_add">+</button></td>
-    </tr>
-    <tr v-for="(v, k) in form.opt">
-        <td><input type="text" v-model="v.opt1"></td>
-        <td><input type="text" v-model="v.opt2"></td>
-        <td><button @click="_opt_remove(k)">-</button></td>
-    </tr>
-</table>
-
-<files></files>
-
-<exec :idx="form.idx" :excel="'product_list'" :reset="isDirtyForm"></exec>
-
-<search :v="x.qs.s_value"></search>
-
-<table class="_table_100 _excel">
+<table class="table_100 _excel">
     <thead>
         <td width="10%">NO</td>
         <td width="15%" class="_no_excel">IMG</td>
@@ -61,7 +30,7 @@
 
 <paging :x='x'></paging>
 
-<% include ../__include/__bottom_1.ejs %>
+<% include __include/__bottom_1.ejs %>
 <script src="<%- $$._path(__filename)("js") %>"></script>
 
 
